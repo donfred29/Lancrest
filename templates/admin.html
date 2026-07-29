@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel – Lancrest{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-navy-900">Admin Dashboard</h1>
+    <p class="text-slate-500 text-sm">System overview & management</p>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+        <p class="text-slate-500 text-sm">Total Members</p>
+        <p class="text-3xl font-bold text-navy-900">{{ total_users }}</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+        <p class="text-slate-500 text-sm">Total Deposits</p>
+        <p class="text-3xl font-bold text-navy-900">${{ "%.2f"|format(total_balance) }}</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+        <p class="text-slate-500 text-sm">Transactions</p>
+        <p class="text-3xl font-bold text-navy-900">{{ total_tx }}</p>
+    </div>
+</div>
+
+<!-- Manual Balance Adjustment -->
+<div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm mb-8">
+    <h2 class="font-bold text-navy-900 mb-4">Manual Balance Adjustment</h2>
+    <form method="post" action="/admin/adjust-balance" class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+        <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Member</label>
+            <select name="user_id" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                {% for u in users if u.role.value == 'user' %}
+                <option value="{{ u.id }}">{{ u.full_name }} ({{ u.username }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Action</label>
+            <select name="action" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                <option value="credit">Credit (Add Funds)</option>
+                <option value="debit">Debit (Deduct Funds)</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Amount ($)</label>
+            <input type="number" name="amount" required min="0.01" step="0.01" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Description</label>
+            <input type="text" name="description" value="Admin Credit" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+        </div>
+        <div>
+            <button type="submit" class="w-full bg-navy-900 hover:bg-navy-800 text-white py-2 rounded-lg text-sm font-medium">Apply</button>
+        </div>
+    </form>
+</div>
+
+<!-- Users Table -->
+<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <div class="px-5 py-4 border-b border-slate-100">
+        <h2 class="font-bold text-navy-900">All Members</h2>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-left">
+                <tr>
+                    <th class="px-5 py-3 font-medium">Member</th>
+                    <th class="px-5 py-3 font-medium">Account</th>
+                    <th class="px-5 py-3 font-medium text-right">Balance</th>
+                    <th class="px-5 py-3 font-medium">Status</th>
+                    <th class="px-5 py-3 font-medium">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for u in users %}
+                <tr class="hover:bg-slate-50">
+                    <td class="px-5 py-3">
+                        <div class="font-medium text-navy-900">{{ u.full_name }}</div>
+                        <div class="text-xs text-slate-500">{{ u.email }}</div>
+                    </td>
+                    <td class="px-5 py-3 font-mono text-xs">{{ accounts[u.id].account_number if u.id in accounts else '—' }}</td>
+                    <td class="px-5 py-3 text-right font-medium">${{ "%.2f"|format(accounts[u.id].balance if u.id in accounts else 0) }}</td>
+                    <td class="px-5 py-3">
+                        {% if u.id in accounts %}
+                            {% if accounts[u.id].status.value == 'active' %}
+                                <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Active</span>
+                            {% else %}
+                                <span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">Frozen</span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="px-5 py-3 space-x-2">
+                        <a href="/admin/user/{{ u.id }}" class="text-accent-600 hover:underline text-xs font-medium">History</a>
+                        {% if u.role.value == 'user' %}
+                        <form method="post" action="/admin/toggle-status/{{ u.id }}" class="inline">
+                            <button type="submit" class="text-xs text-slate-600 hover:text-navy-900">
+                                {% if u.id in accounts and accounts[u.id].status.value == 'active' %}Freeze{% else %}Activate{% endif %}
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

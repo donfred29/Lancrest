@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Member History – Lancrest{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/admin" class="text-sm text-accent-600 hover:underline">← Back to Admin</a>
+</div>
+
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-navy-900">{{ target.full_name }}</h1>
+    <p class="text-slate-500 text-sm">{{ target.email }} · {{ account.account_number }}</p>
+</div>
+
+<div class="bg-navy-900 text-white rounded-2xl p-5 mb-6">
+    <p class="text-slate-300 text-sm">Current Balance</p>
+    <p class="text-3xl font-bold">${{ "%.2f"|format(account.balance) }}</p>
+</div>
+
+<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <div class="px-5 py-4 border-b border-slate-100">
+        <h2 class="font-bold text-navy-900">Transaction History</h2>
+    </div>
+    {% if history %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-left">
+                <tr>
+                    <th class="px-5 py-3 font-medium">Date</th>
+                    <th class="px-5 py-3 font-medium">Type</th>
+                    <th class="px-5 py-3 font-medium">Description</th>
+                    <th class="px-5 py-3 font-medium text-right">Amount</th>
+                    <th class="px-5 py-3 font-medium text-right">Balance</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for item in history %}
+                <tr>
+                    <td class="px-5 py-3 text-slate-500">{{ item.tx.created_at.strftime('%b %d, %Y %H:%M') }}</td>
+                    <td class="px-5 py-3 text-xs">{{ item.tx.type.value.replace('_', ' ')|title }}</td>
+                    <td class="px-5 py-3">{{ item.tx.description or '—' }}</td>
+                    <td class="px-5 py-3 text-right font-medium">${{ "%.2f"|format(item.tx.amount) }}</td>
+                    <td class="px-5 py-3 text-right font-medium">${{ "%.2f"|format(item.running_balance) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="p-8 text-center text-slate-500">No transactions</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Lancrest Credit Union{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 800: '#1e3a5f', 900: '#0f2744', 700: '#2a4a6f' },
+                        accent: { 500: '#10b981', 600: '#059669' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col text-slate-800">
+    <!-- Demo Banner -->
+    <div class="bg-amber-400 text-amber-950 text-center text-xs sm:text-sm font-semibold py-2 px-3">
+        ⚠️ EDUCATIONAL DEMO ONLY — Not a real bank · No real money · For learning purposes
+    </div>
+
+    <nav class="bg-navy-900 text-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2 font-bold text-lg tracking-tight">
+                <span class="bg-accent-500 text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm">LC</span>
+                Lancrest <span class="hidden sm:inline font-normal text-slate-300 text-sm ml-1">Credit Union</span>
+            </a>
+            <div class="flex items-center gap-3 text-sm">
+                {% if user %}
+                    <span class="hidden sm:inline text-slate-300">{{ user.full_name or user.username }}</span>
+                    {% if user.role.value == 'admin' %}
+                        <a href="/admin" class="bg-accent-500 hover:bg-accent-600 px-3 py-1.5 rounded-lg font-medium">Admin</a>
+                    {% endif %}
+                    <a href="/dashboard" class="hover:text-accent-500">Dashboard</a>
+                    <a href="/logout" class="text-slate-400 hover:text-white">Logout</a>
+                {% else %}
+                    <a href="/login" class="hover:text-accent-500">Login</a>
+                    <a href="/register" class="bg-accent-500 hover:bg-accent-600 px-3 py-1.5 rounded-lg font-medium">Open Account</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-navy-900 text-slate-400 text-center text-xs py-4 mt-8">
+        Lancrest Credit Union Bank · Educational Simulation · Not a real financial institution
+    </footer>
+</body>
+</html>

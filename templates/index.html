@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Lancrest Credit Union – Home{% endblock %}
+
+{% block content %}
+<div class="text-center py-12 sm:py-20">
+    <h1 class="text-3xl sm:text-5xl font-bold text-navy-900 mb-4">Banking made simple & trusted</h1>
+    <p class="text-slate-600 text-lg max-w-xl mx-auto mb-8">
+        A modern educational credit union platform. Manage accounts, pay bills, request cards, and more — all in a safe demo environment.
+    </p>
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/register" class="bg-accent-500 hover:bg-accent-600 text-white px-8 py-3 rounded-xl font-semibold text-lg transition">
+            Open an Account
+        </a>
+        <a href="/login" class="bg-white border-2 border-navy-800 text-navy-900 px-8 py-3 rounded-xl font-semibold text-lg hover:bg-slate-50 transition">
+            Member Login
+        </a>
+    </div>
+</div>
+
+<div class="grid sm:grid-cols-3 gap-6 mt-8">
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="w-12 h-12 bg-navy-900 text-white rounded-xl flex items-center justify-center text-xl mb-4">💸</div>
+        <h3 class="font-bold text-navy-900 mb-2">Transfers & Payments</h3>
+        <p class="text-slate-600 text-sm">Send money to other members or pay utility bills instantly in this simulation.</p>
+    </div>
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="w-12 h-12 bg-accent-500 text-white rounded-xl flex items-center justify-center text-xl mb-4">💳</div>
+        <h3 class="font-bold text-navy-900 mb-2">Virtual Cards</h3>
+        <p class="text-slate-600 text-sm">Request a virtual debit card instantly and control spending limits.</p>
+    </div>
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="w-12 h-12 bg-navy-800 text-white rounded-xl flex items-center justify-center text-xl mb-4">🛡️</div>
+        <h3 class="font-bold text-navy-900 mb-2">Secure & Transparent</h3>
+        <p class="text-slate-600 text-sm">Full transaction history with running balance and admin oversight tools.</p>
+    </div>
+</div>
+{% endblock %}

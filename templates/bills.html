@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Pay Bills – Lancrest{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+    <h1 class="text-2xl font-bold text-navy-900 mb-2">Pay Bills</h1>
+    <p class="text-slate-500 text-sm mb-6">Simulated utility payments</p>
+
+    <div class="bg-navy-900 text-white rounded-xl p-4 mb-6">
+        <p class="text-slate-300 text-sm">Available Balance</p>
+        <p class="text-2xl font-bold">${{ "%.2f"|format(account.balance) }}</p>
+    </div>
+
+    {% if error %}<div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">{{ error }}</div>{% endif %}
+    {% if success %}<div class="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-sm">{{ success }}</div>{% endif %}
+
+    <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
+        <form method="post" action="/bills" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Provider</label>
+                <select name="provider" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-accent-500 outline-none">
+                    <option value="">Select provider</option>
+                    <option value="Electricity - PowerGrid">Electricity – PowerGrid</option>
+                    <option value="Water - City Water">Water – City Water</option>
+                    <option value="Internet - FastNet">Internet – FastNet</option>
+                    <option value="TV - StreamTV">TV Subscription – StreamTV</option>
+                    <option value="Gas - MetroGas">Gas – MetroGas</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Meter / Account Number</label>
+                <input type="text" name="account_ref" required placeholder="e.g. 98234156" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-accent-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Amount ($)</label>
+                <input type="number" name="amount" required min="0.01" step="0.01" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-accent-500 outline-none">
+            </div>
+            <button type="submit" class="w-full bg-accent-500 hover:bg-accent-600 text-white py-3 rounded-xl font-semibold transition">Pay Bill</button>
+        </form>
+    </div>
+    <p class="mt-4 text-center"><a href="/dashboard" class="text-sm text-accent-600 hover:underline">← Back to Dashboard</a></p>
+</div>
+{% endblock %}
